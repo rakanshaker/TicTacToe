@@ -49,7 +49,7 @@ restart_btn.addEventListener("click", (event) => {
   cells.forEach((item) => {
     clear_cell_events(cells);
     item.innerHTML = "";
-    turn = 1;
+    turn = "x";
   });
   array_y = [];
   array_x = [];
@@ -57,7 +57,12 @@ restart_btn.addEventListener("click", (event) => {
   setup_game(cells);
 });
 
-let turn = 1;
+const change_turn = () => {
+  turn = turn === "x" ? "o" : "x";
+  return turn;
+};
+
+let turn = "x";
 
 function win_game(player) {
   // log to screen you won
@@ -74,7 +79,8 @@ function clear_cell_events(cells) {
 
 function handle_game(ev) {
   let item = ev.target;
-  if (turn % 2 && item.innerHTML == "") {
+  console.log(turn);
+  if (turn == "x" && item.innerHTML == "") {
     // push text into paragraph
     // node.appendChild(create_x);
     // //append item (each cell) with the paragraph containing "x"
@@ -82,22 +88,23 @@ function handle_game(ev) {
     item.innerHTML = "X";
     array_x.push(parseInt(item.getAttribute("data-cell-index")));
     console.log(array_x);
+    change_turn();
     if (check_win(array_x, winning_conditions)) {
       win_game("Player X");
       return;
       //end_game function?
     }
-  } else if (item.innerHTML == "") {
+  } else if (turn == "o" && item.innerHTML == "") {
     item.innerHTML = "O";
     array_y.push(parseInt(item.getAttribute("data-cell-index")));
     console.log(array_y);
+    change_turn();
     if (check_win(array_y, winning_conditions)) {
       win_game("Player O");
       return;
     }
   }
-
-  turn++;
+  // turn++;
   if (array_y.length + array_x.length == 9) {
     document.getElementById("status").innerHTML = "Draw!";
     clear_cell_events(cells);
